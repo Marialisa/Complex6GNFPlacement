@@ -121,7 +121,7 @@ crossdatadf$To<-gsub( "V", "", as.character(crossdatadf$To))
 crossdatadf
 multilink2<-crossdatadf
 A_multi<-c()
-A_multi<- ifelse(multilink2$Value!=0 , multilink2$Value,0)
+A_multi<- ifelse(multilink2$Value==0 | is.na(multilink2$Value), 0, multilink2$Value)
 A_multi_matrix<-matrix(A_multi,ncol = N,nrow  = N, byrow = TRUE)
 multilink2$amulti<-paste(A_multi)
 graphmulti<-graph_from_adjacency_matrix(A_multi_matrix, mode="undirected", weighted = TRUE)
