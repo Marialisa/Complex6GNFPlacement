@@ -47,6 +47,26 @@ Launch RStudio and navigate to the directory where you cloned or extracted the r
 
 If you use this code in your research, please cite the following paper:
 
-- [Author(s). "Title of the Paper." Journal/Conference Name, Year.]
-- [Author(s). "Title of the Paper." Journal/Conference Name, Year.]
+- [Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A 6G Function Placement Framework Based on Complex Networks and Evolutionary Dynamics." 2nd International Conference on 6G Networking (6GNet), 2023.]
 
+Bibtex Citation :
+@inproceedings{scata20236g,
+  title={A 6G Function Placement Framework Based on Complex Networks and Evolutionary Dynamics},
+  author={Scat{\`a}, M and La Corte, A and Marotta, A and Graziosi, F and Cassioli, D},
+  booktitle={2023 2nd International Conference on 6G Networking (6GNet)},
+  pages={1--4},
+  year={2023},
+  organization={IEEE}
+}
+- [Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A Complex Network and Evolutionary Game Theory Framework for 6G Function Placement." IEEE Open Journal of the Communications Society, 2024.(*currently in revision*)]
+Bibtex Citation :
+
+
+## Extensions
+In addition to the original algorithm, this repository, in future reserves the options to include other extensions developed to enhance its functionality or address specific use cases. These extensions will be provided within the repository. Each extension may will have its own documentation and usage instructions.
+
+## License
+The code in this repository is licensed under the MIT License. Please see the LICENSE file for more information.
+
+## Contributions
+Contributions to this repository, including bug fixes, improvements, and new extensions, are welcome. 
