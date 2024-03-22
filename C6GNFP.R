@@ -5,11 +5,11 @@ library(foreach)
 library(Matrix)
 library(RColorBrewer)
 library(ggplot2)
-library(markovchain)
-library(plot3D)
 library(plotly)
 library(base)
-library(scatterplot3d)
+#library(markovchain)
+require(plot3D)
+require(scatterplot3d)
 require(dplyr)
 require(scatterplot3d)
 require(fields)
@@ -20,44 +20,49 @@ require(devtools)
 
 
 #population size
-N=292;
+N=542;
 #layers of multiplex network representation
 M=2;
 
 
 multiplex_adj <- list()  
 graphs <- list()
+weightedmultiplex<- list()
 
-####Data### 
+####Input Data### 
 #adjacency matrix from real topology#
-graph_layer <- read.csv("path", header = FALSE)
+graph_layer <- read.csv("C:\\your_local_path\\500_A_with_rus.csv", header = FALSE)
 #latency matrix from real topology#
-graph_layer_withweights1 <- read.csv("path/250_L.csv", header = FALSE)
+graph_layer_withweights1 <- read.csv("C:\\your_local_path\\500_L.csv", header = FALSE)
 #interference matrix from real topology#
-graph_layer_withweights2 <- read.csv("path/250_I.csv", header = FALSE)
+graph_layer_withweights2 <- read.csv("C:\\your_local_path\\500_I.csv", header = FALSE)
 
-coo <- read.csv("path/250_coos_with_rus.csv", header = FALSE)
+coo <- read.csv("C:\\your_local_path\\500_coordinates_with_rus.csv", header = FALSE)
 matrix_coord<-as.matrix(coo)
 
 colnames(graph_layer) <- c(1:N)
 colnames(graph_layer_withweights1) <- c(1:N)
 colnames(graph_layer_withweights2) <- c(1:N)
 
-
 graph_layer_matrix<-as.matrix(graph_layer)
+graph_layer_withweights1<-(graph_layer_withweights1/max(graph_layer_withweights1))*2
 graph_layer_matrix_withweights1<-as.matrix(graph_layer_withweights1)
+
+graph_layer_withweights2<-((graph_layer_withweights2/max(graph_layer_withweights2))*2)*graph_layer_matrix
 graph_layer_matrix_withweights2<-as.matrix(graph_layer_withweights2)
 
-graph_startopology=graph.adjacency(graph_layer_matrix, mode="undirected", weighted= NULL)
-grafo_withweights1=graph.adjacency(graph_layer_matrix_withweights1, mode="undirected", weighted = TRUE)
-grafo_withweights2=graph.adjacency(graph_layer_matrix_withweights2, mode="undirected", weighted = TRUE)
-
+graph_startopology=graph_from_adjacency_matrix(graph_layer_matrix, mode="undirected", weighted= NULL)
+grafo_withweights1=graph_from_adjacency_matrix(graph_layer_matrix_withweights1, mode="undirected", weighted = TRUE)
+grafo_withweights2=graph_from_adjacency_matrix(graph_layer_matrix_withweights2, mode="undirected", weighted = TRUE)
 
 
 graph_startopology<-simplify(graph_startopology, remove.multiple = TRUE, remove.loops = TRUE,
-                           edge.attr.comb = igraph_opt("edge.attr.comb"))
+                             edge.attr.comb = igraph_opt("edge.attr.comb"))
 par(mfrow=c(1,1))
-plot_graph_startopology <-plot.igraph(graph_startopology, vertex.label=NA, layout=layout.fruchterman.reingold, vertex.color='orange', vertex.size=3,edge.color="grey80" )
+
+
+
+#STARTING GRAPH TOPOLOGY
 plot(graph_startopology,directed= NULL, layout=matrix_coord,edge.arrow.size= E(graph_startopology)$weight
      , rescale=FALSE,  vertex.label=NA,
      xlim=range(matrix_coord[,1]), ylim=range(matrix_coord[,2]), vertex.label.dist=0,
@@ -67,21 +72,9 @@ axis(1)
 axis(2)
 
 
-par(mfrow=c(1,2))
-plot_graph_layer1 <-plot.igraph(grafo_withweights1,main="Layer 1",vertex.label=NA, layout=layout.fruchterman.reingold,vertex.color='orange', vertex.size=4, vertex.frame.color = "black", edge.width=((E(grafo_withweights1)$weight)/max(E(grafo_withweights1)$weight))*3, edge.color="grey")
-plot_graph_layer2 <-plot.igraph(grafo_withweights2,main="Layer 2", vertex.label=NA, layout=layout.fruchterman.reingold,vertex.color='orange', vertex.size=4, vertex.frame.color = "black", edge.width=((E(grafo_withweights2)$weight)/max(E(grafo_withweights2)$weight))*3, edge.color="grey")
-V(graph_startopology)$label.cex <- seq(0.6,5,length.out=1)  
-p1_withlab<-plot.igraph(graph_startopology, layout=layout.fruchterman.reingold,vertex.color='red',vertex.label.dist=0.3, vertex.label.degree=pi/2, vertex.size=1, edge.color="black")
-par(mfrow=c(1,2))
-plot_graph_layer1 <-plot.igraph(grafo_withweights1,main="Layer 1",vertex.label=NA, layout=layout.fruchterman.reingold,vertex.color='lightsteelblue2', vertex.size=3, vertex.frame.color = "black", edge.width=E(grafo_withweights1)$weight, edge.color="grey50")
-plot_graph_layer2 <-plot.igraph(grafo_withweights2,main="Layer 2", vertex.label=NA, layout=layout.fruchterman.reingold,vertex.color='lightsteelblue2', vertex.size=3, vertex.frame.color = "black", edge.width=E(grafo_withweights2)$weight, edge.color="grey50")
-par(mfrow=c(1,2))
-p2_withlab<-plot.igraph(grafo_withweights1, layout=layout.fruchterman.reingold,vertex.color='lightsteelblue2',vertex.label.cex=c(0.6),vertex.label.dist=0, vertex.label.color=c("black"),vertex.label.degree=0, vertex.size=0.5,vertex.frame.color = "black",edge.width=E(grafo_withweights1)$weight, edge.color="grey50")
-p3_withlab<-plot.igraph(grafo_withweights2, layout=layout.fruchterman.reingold,vertex.color='lightsteelblue2',vertex.label.cex=c(0.6),vertex.label.dist=0, vertex.label.degree=0, vertex.label.color=c("black"), vertex.size=0.5,vertex.frame.color = "black", edge.width=E(grafo_withweights2)$weight, edge.color="grey50")
-
-
 
 ###Representation of Starting Graph into a Weighted Multiplex Network
+
 multiplex_adj[[1]]=grafo_withweights1
 multiplex_adj[[2]]=grafo_withweights2
 
@@ -92,7 +85,7 @@ weightedmultiplex[[2]]=grafo_withweights2
 strenght_node<-matrix(,nrow=N,ncol=M)
 inversepart_nodo<-matrix(,nrow=N,ncol=M)
 for (i in 1:M){
-    for (j in 1:N){
+  for (j in 1:N){
     strenght_node[j,i]=sum(multiplex_adj[[i]][j,])
     inversepart_nodo[j,i]=sum((multiplex_adj[[i]][j,]/strenght_node[j,i])^2)
   }
@@ -108,8 +101,8 @@ multiplex_adj[[1]]<-graph_layer_matrix_withweights1
 multiplex_adj[[2]]<-graph_layer_matrix_withweights2
 
 multilink2<-multiplex_adj[[1]]+multiplex_adj[[2]]
-write.table(multilink2, file="/path/matrix_multilink.txt", row.names=FALSE, col.names=FALSE)
-data <- read.table("/path/matrix_multilink.txt",header = FALSE, sep = "")
+write.table(multilink2, file="C:\\your_local_path\\matrix_multilink.txt", row.names=FALSE, col.names=FALSE)
+data <- read.table("C:\\your_local_path\\matrix_multilink.txt",header = FALSE, sep = "")
 crossdata <- lapply(rownames(data),function(x)sapply(colnames(data),function(y)list(x,y,data[x,y])))
 crossdatatmp <- matrix(unlist(crossdata),nrow=3)
 crossdatamat <- t(crossdatatmp)
@@ -120,6 +113,7 @@ crossdatadf
 crossdatadf$To<-gsub( "V", "", as.character(crossdatadf$To))
 crossdatadf
 multilink2<-crossdatadf
+
 A_multi<-c()
 A_multi<- ifelse(multilink2$Value==0 | is.na(multilink2$Value), 0, multilink2$Value)
 A_multi_matrix<-matrix(A_multi,ncol = N,nrow  = N, byrow = TRUE)
@@ -129,13 +123,9 @@ matrice_multi_adj <-get.adjacency(graphmulti)
 multi_degree_nodi = degree (graphmulti, v=V(graphmulti))
 id_multi_nodes<-c()
 id_multi_nodes<-as_ids(V(graphmulti))
+
 multi_data<-data.frame(id_multi_nodes,multi_degree_nodi)
-
-
-plot_grafo_multidegree <-plot.igraph(graphmulti, vertex.label.dist=1,vertex.label.degree=pi/2, vertex.label.size=1, layout=layout.fruchterman.reingold,vertex.color=V(graphmulti)$color, vertex.size=multi_degree_nodi, edge.width=E(graphmulti)$weight, edge.color="black")
 bet<-betweenness(graphmulti, normalized= TRUE)
-
-
 
 ## potential nodes detection ##
 
@@ -152,108 +142,93 @@ strenght_potenziali <- ifelse(strenght_node[,1]>mean(strenght_node[,1]) & streng
 sum_strenght<-strenght_node[,1]+strenght_node[,2]
 rank_cent_ord2<-data.frame(rank_cent_ord2, sum_strenght[potential_rank$id_multi_nodes], strenght_potenziali[potential_rank$id_multi_nodes] )
 
-
-N_D <- read.csv("path/250_D.csv", header = FALSE)
-node_delay<-seq(0,0.025,0.050,0.075,0.100)
-N_D<-N_D+node_delay*shortest.paths(graphmulti)
+N_D <- read.csv("C:\\your_local_path\\500_D.csv", header = FALSE)
+node_delay<-0.100
+N_D<-N_D+node_delay*distances(graphmulti)
 colnames(N_D) <- c(1:N)
 N_D<-as.matrix(N_D)
 
-Xaxis <- seq(0.001,2.5,0.001)
-set <- c()
-for (nd in node_delay) {
-for(j in 1:2500){
-  db=Xaxis[j]
-  N_D[c(potential_rank$id_multi_nodes),][1,]
-  check_pot<-matrix(,nrow = length(rank_cent_ord$potential_rank.id_multi_nodes), ncol = N)
-  for (i in 1:length(rank_cent_ord$potential_rank.id_multi_nodes)) {
-    check_pot[i,]<-unname(ifelse(N_D[c(rank_cent_ord$potential_rank.id_multi_nodes),][i,]<db,TRUE,FALSE))
-  }
-  check_pot=check_pot[,- (rank_cent_ord$potential_rank.id_multi_nodes)]
-  check_pot
-  datacheckpot<- as.data.frame(check_pot)
-  datacheckpot2 <- data.frame(t(datacheckpot))
-  datacheckpot2<- as.matrix(datacheckpot2)
-  m <- structure(c(datacheckpot2), .Dim = c(250L,  42L), .Dimnames = list(NULL, c(1:42)))
-  colnames(m)[ifelse(rowSums(m)==0, NA, max.col(m, "first"))]
-  unique(colnames(m)[ifelse(rowSums(m)==0, NA, max.col(m, "first"))])
-  ordineestratto<-unique(colnames(m)[ifelse(rowSums(m)==0, NA, max.col(m, "first"))])
-  indices <- as.integer(ordineestratto)
-  
-  rank_cent_ord$potential_rank.id_multi_nodes[indices]
-  nodes_in_egt<-c(rank_cent_ord2$potential_rank.id_multi_nodes)
-  set[j] <- length(nodes_in_egt[indices])}
+
+
+m<- matrix()
+db=mean(N_D)
+N_D[c(potential_rank$id_multi_nodes),][1,]
+check_pot<-matrix(,nrow = length(rank_cent_ord$potential_rank.id_multi_nodes), ncol = 542)
+    
+for (i in 1:length(rank_cent_ord$potential_rank.id_multi_nodes)) {
+check_pot[i,]<-unname(ifelse(N_D[c(rank_cent_ord$potential_rank.id_multi_nodes),][i,]<db,TRUE,FALSE))
 }
-
-
-V(graphmulti)$color <- "white" 
-V(graphmulti)$color[c(rank_cent_ord2$potential_rank.id_multi_nodes)]<-"tomato"
-V(graphmulti)$label[c(rank_cent_ord2$potential_rank.id_multi_nodes)]<-rank_cent_ord2$potential_rank.id_multi_nodes
-p1_withlab<-plot.igraph(graphmulti, layout=layout.fruchterman.reingold,vertex.label.dist=0.3, vertex.label.degree=pi/2, vertex.size=2, edge.color="black",edge.width=E(graphmulti)$weight)
+check_pot=check_pot[, -rank_cent_ord$potential_rank.id_multi_nodes]
+check_pot
+datacheckpot<- as.data.frame(check_pot)
+datacheckpot2 <- data.frame(t(datacheckpot))
+datacheckpot2<- as.matrix(datacheckpot2)
+    
+m <- structure(c(check_pot), .Dim = c(500L,  42L), .Dimnames = list(NULL, c(1:42)))
+colnames(m)[ifelse(rowSums(m)==0, NA, max.col(m, "first"))]
+unique(colnames(m)[ifelse(rowSums(m)==0, NA, max.col(m, "first"))])
+ordineestratto<-unique(colnames(m)[ifelse(rowSums(m)==0, NA, max.col(m, "first"))])
+indices <- as.integer(ordineestratto)
+rank_cent_ord$potential_rank.id_multi_nodes[indices]
+nodes_in_egt<-c(rank_cent_ord2$potential_rank.id_multi_nodes)
+length(nodes_in_egt[indices])
 
 remove_nostrenght<-subset(rank_cent_ord2, rank_cent_ord2$strenght_potenziali.potential_rank.id_multi_nodes.==0)
 rank_cent_ord2<-anti_join(rank_cent_ord2, remove_nostrenght)
 nodes_in_egt<-c(rank_cent_ord2$potential_rank.id_multi_nodes)
-
+    
 capacity<-bet[nodes_in_egt]
 sizeforscore<-length(nodes_in_egt)
-N_D <- read.csv("path/250_D.csv", header = FALSE)
+N_D <- read.csv("C:\\your_local_path\\500_D.csv", header = FALSE)
 colnames(N_D) <- c(1:N)
 N_D<-as.matrix(N_D)
 db=mean(N_D)
+
 score<-c()
 incentive<-c()
 dataset_for_egt<-data.frame()
-
+    
 
 for (i in 1:length(nodes_in_egt)) {
   score[i]<-sum(ifelse(N_D[c(nodes_in_egt),][i,]<db,1,0))
 }
+
 incentive<-(1/(score*capacity))*10/N
 dataset_for_egt<-data.frame(nodes_in_egt,capacity,score,incentive)
 
-write.graph(graphmulti, "path/graphmulti.csv", "edgelist")
-write.csv(dataset_for_egt, "path/datasetforegt.csv")
+write.graph(graphmulti, "C:\\your_local_path\\graphmulti.csv", "edgelist")
+write.csv(dataset_for_egt, "C:\\your_local_path\\datasetforegt.csv")
 
-coo <- read.csv("path/250_coos_with_rus.csv", header = FALSE)
+
+
+coo <- read.csv("C:\\your_local_path\\500_coordinates_with_rus.csv", header = FALSE)
 matrix_coord<-as.matrix(coo)
-V(graphmulti)$color <- "white" 
+V(graphmulti)$color <- "white"
 V(graphmulti)$color[c(rank_cent_ord2$potential_rank.id_multi_nodes)]<-"tomato"
-V(graphmulti)$label[c(rank_cent_ord2$potential_rank.id_multi_nodes)]<-rank_cent_ord2$potential_rank.id_multi_nodes
+
 par(mfrow=c(1,1))
 plot(graphmulti, layout=matrix_coord,edge.arrow.size= E(graphmulti)$weight
      , rescale=FALSE,  vertex.size=14,
      xlim=range(matrix_coord[,1]), ylim=range(matrix_coord[,2]), vertex.label.dist=0,
-     edge.color="grey", edge.width=E(graphmulti)$weight) 
+     edge.color="grey", edge.width=E(graphmulti)$weight)
 axis(1)
 axis(2)
 
-size_node[nodes_in_egt]<-unname(bet[nodes_in_egt])
-plot(subgraph(graphmulti, nodes_in_egt),vertex.size=size_node*50,edge.width=E(graphmulti)$weight)
-
-size_node[nodes_in_egt]<-multi_degree_nodi[nodes_in_egt]
-plot(subgraph(graphmulti, nodes_in_egt),vertex.color='yellow', vertex.size=size_node,edge.width=E(graphmulti)$weight)
-
-
+#plot subset potential nodes with size uquals to betwenness
 size_node<-c()
-for(j in 1:N)
-{ size_node[j]=1
-}
-size_node[c(rank_cent_ord2$potential_rank.id_multi_nodes)]=score
+size_node[nodes_in_egt]<-unname(bet[nodes_in_egt])*100
+plot(subgraph(graphmulti, nodes_in_egt),vertex.size=size_node[nodes_in_egt],edge.width=E(graphmulti)$weight)
 
-plot(graphmulti, layout=matrix_coord,edge.arrow.size= E(graphmulti)$weight
-     , rescale=FALSE,  vertex.size=size_node,
-     xlim=range(matrix_coord[,1]), ylim=range(matrix_coord[,2]), vertex.label.dist=0,
-     edge.color="grey", edge.width=E(graphmulti)$weight) 
-axis(1)
-axis(2)
+#plot subset potential nodes with size uquals to multidegree
+size_node[nodes_in_egt]<-multi_degree_nodi[nodes_in_egt]
+plot(subgraph(graphmulti, nodes_in_egt),vertex.color='yellow', vertex.size=size_node[nodes_in_egt],edge.width=E(graphmulti)$weight)
 
-##########################################################################
-#####EGT CODE start here #####
-##########################################################################
 
-#!/usr/bin/env Rscript
-######LIB
+###################################################
+################### EGT CODE###################
+###################################################
+
+
 library(igraph)
 library(foreach)
 library(Matrix)
@@ -262,7 +237,7 @@ registerDoParallel()
 
 n_step = 200
 n_simulazioni = 1 
-popolazione= 292
+popolazione= 542
 critical_mass = 3 
 M= 1
 dev_standard_omofilia = 1
@@ -300,7 +275,7 @@ x1 = c();
 
 for (i in 1:M)
 {
-    grafo_lay<- graphmulti
+  grafo_lay<- graphmulti
   
   matrice_adiacenze <- get.adjacency(grafo_lay, type = "both");
   matrice <- matrix(matrice_adiacenze, nrow=popolazione, ncol=popolazione)
@@ -328,14 +303,14 @@ for (i in 1:M)
                                 incentive=1) 
   
   potential_dataset <- data.frame() 
-  potential_dataset <- read.csv("path/datasetforegt.csv", header = TRUE,stringsAsFactors = FALSE, fill=FALSE, sep=",")
+  potential_dataset <- read.csv("C:\\your_local_path\\datasetforegt.csv", header = TRUE,stringsAsFactors = FALSE, fill=FALSE, sep=",")
   potential_dataset$X <- NULL 
   
   
   for (z in 1:nrow(potential_dataset)){
-    elenco_nodi[[i]]$incentive[ which(elenco_nodi[[1]]$id_nodo == potential_dataset$nodi_in_egt[z])] <- potential_dataset$incentive[z] 
-    elenco_nodi[[i]]$score[ which(elenco_nodi[[1]]$id_nodo == potential_dataset$nodi_in_egt[z])] <- potential_dataset$score[z]
-    elenco_nodi[[i]]$capacity[ which(elenco_nodi[[1]]$id_nodo == potential_dataset$nodi_in_egt[z])] <- potential_dataset$capacity[z]
+    elenco_nodi[[i]]$incentive[ which(elenco_nodi[[1]]$id_nodo == potential_dataset$nodes_in_egt[z])] <- potential_dataset$incentive[z] 
+    elenco_nodi[[i]]$score[ which(elenco_nodi[[1]]$id_nodo == potential_dataset$nodes_in_egt[z])] <- potential_dataset$score[z]
+    elenco_nodi[[i]]$capacity[ which(elenco_nodi[[1]]$id_nodo == potential_dataset$nodes_in_egt[z])] <- potential_dataset$capacity[z]
   } 
   
   multilayer_omofilie[[i]] = matrix(, nrow = popolazione, ncol = popolazione)
@@ -469,7 +444,7 @@ for(h in 1:n_step)
       }
       for(index_altro_player in adiacenze_temp)
       {
-          if(index < index_altro_player)
+        if(index < index_altro_player)
         {
           antagonista_coperativo = TRUE;
           if(elenco_nodi[[lay]][["is_coperative"]][index_altro_player] == 0)
@@ -556,7 +531,7 @@ for(h in 1:n_step)
     {
       if(elenco_nodi[[lay]][["is_coperative"]][index] == 1) colors[index] = rgb(1,0,0)
       adiacenze_temp = unlist(lista_nodi[[lay]][[index]]);
-       random_index = 0;
+      random_index = 0;
       if(length(adiacenze_temp) == 1)
       {
         random_index = adiacenze_temp[1]
@@ -612,7 +587,7 @@ for(h in 1:n_step)
             
             
             denominatore = denominatore + comunicability;
-             if(elenco_nodi[[alpha]][["last_time_coperative"]][[elem_x]] == elenco_nodi[[beta]][["last_time_coperative"]][[elem_y]] )
+            if(elenco_nodi[[alpha]][["last_time_coperative"]][[elem_x]] == elenco_nodi[[beta]][["last_time_coperative"]][[elem_y]] )
             {
               numeratore = numeratore + comunicability;
             }
@@ -662,15 +637,15 @@ for(h in 1:n_step)
 elenco_nodi
 
 elenco_nodi_coop<-data.frame(elenco_nodi[[1]]$id_nodo,elenco_nodi[[1]]$num_cooperazioni)
-elenco_nodi_coop_selected <- elenco_nodi_coop[elenco_nodi_coop$elenco_nodi..1...id_nodo %in% nodi_in_egt, ]
-elenco_nodi_coop_selected <- elenco_nodi_coop_selected[match(nodi_in_egt, elenco_nodi_coop_selected$elenco_nodi..1...id_nodo),]
-
+elenco_nodi_coop_selected <- elenco_nodi_coop[elenco_nodi_coop$elenco_nodi..1...id_nodo %in% nodes_in_egt, ]
+elenco_nodi_coop_selected <- elenco_nodi_coop_selected[match(nodes_in_egt, elenco_nodi_coop_selected$elenco_nodi..1...id_nodo),]
+elenco_nodi_coop_theothers<- elenco_nodi_coop[!elenco_nodi_coop$elenco_nodi..1...id_nodo %in% nodes_in_egt, ]
 
 nodes_coop_selected<-elenco_nodi_coop_selected
 
-##########################################################################
-#####EGT CODE ends here #####
-##########################################################################
+###################################################
+###################END EGT CODE###################
+###################################################
 
 nodes_coop_selected
 
@@ -697,6 +672,8 @@ clusters.list = rect.hclust(hc1 , k = 3, border = 2:6)
 clusters = cutree(hc1, k = 3)
 cutree(hc1,1) 
 
+
+#colored graph with function placement into the potential set of N
 d<-data.frame(cutree(hc1,3)) 
 rownames(d) <- nodes_in_egt
 d_new<-d
@@ -704,7 +681,7 @@ size_node[nodes_in_egt]<-(unname(bet[c(rank_cent_ord2$potential_rank.id_multi_no
 V(graphmulti)[nodes_in_egt]$color<-clusters
 plot(subgraph(graphmulti, nodes_in_egt),vertex.size=size_node)
 
-
+#colored graph with function placement into the starting topology of N nodes 
 V(graphmulti)$color<-"white"
 V(graphmulti)[nodes_in_egt]$color<-clusters
 plot(graphmulti, layout=matrix_coord,edge.arrow.size= E(graphmulti)$weight
@@ -714,6 +691,7 @@ plot(graphmulti, layout=matrix_coord,edge.arrow.size= E(graphmulti)$weight
 axis(1)
 axis(2)
 
+#colored graph with function placement into the starting topology of N nodes with label of different functions
 V(graphmulti)$color<-"white"
 V(graphmulti)[nodes_in_egt]$color<-clusters
 plot(graphmulti, layout=matrix_coord,edge.arrow.size= E(graphmulti)$weight
@@ -729,7 +707,7 @@ legend(x=-1, y=11, c("NGC","CU", "DU","RU"), pch=21,
 
 data_score_node<-data.frame(nodes_in_egt,clusters, verylast_dataset$filtro)
 
-### placement vectors###
+### placement vectors and data###
 
 vectors_NGC<-data_score_node[data_score_node$clusters==3,]$nodes_in_egt
 vectors_CU<-data_score_node[data_score_node$clusters==2,]$nodes_in_egt
@@ -762,7 +740,7 @@ for (i in 1:length(vectors_RU)){
 
 du_corrisp_2<-c()
 for (i in 1:length(vectors_RU)){
-   du_corrisp_2[i]<-vectors_DU[match(path_RU[[i]][3],vectors_DU)]
+  du_corrisp_2[i]<-vectors_DU[match(path_RU[[i]][3],vectors_DU)]
 }
 
 
@@ -828,28 +806,7 @@ RU_NGC_path$cu_corrisp<- RU_NGC_path_test1$cu_corrisp
 DATAFRAME_FINAL_PATH<-data.frame(RU_NGC_path$vectors_RU,RU_NGC_path$du_corrisp,RU_NGC_path$cu_corrisp,RU_NGC_path$ngc_corrisp)
 
 
-write.graph(graphmulti, "path/graphmulti.csv", "edgelist")
-write.csv(dataset_for_egt, "path/datasetforegt.csv")
+write.graph(graphmulti, "C:\\your_local_path\\graphmulti.csv", "edgelist")
+write.csv(dataset_for_egt, "C:\\your_local_path\\datasetforegt.csv")
 
-
-colnames(data_score_node)[1] <- "Nodes"
-colnames(data_score_node)[2]<-"Role"
-colnames(data_score_node)[3]<-"Cooperation Score"
-
-data_score_node$Role<-factor(data_score_node$Role)
-levels(data_score_node$Role)
-
-library(plyr)
-data_score_node$Role<-revalue(data_score_node$Role, c("1"="DU", "2"="CU", "3"="NGC"))
-colnames(DATAFRAME_FINAL_PATH)[1] <- "Ru"
-colnames(DATAFRAME_FINAL_PATH)[2]<-"DU"
-colnames(DATAFRAME_FINAL_PATH)[3]<-"CU"
-colnames(DATAFRAME_FINAL_PATH)[4]<-"NGC"
-
-write.csv(data_score_node,  "path/data_score_node_250.csv")
-write.csv(DATAFRAME_FINAL_PATH,  "path/dataframefinal_250.csv")
-
-sink("path/paths_250.txt")
-print(path_RU)
-sink()
 
