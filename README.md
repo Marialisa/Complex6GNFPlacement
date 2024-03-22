@@ -39,7 +39,9 @@ Launch RStudio and navigate to the directory where you cloned or extracted the r
 
 #### Run the Project:
 
-Once you've installed the dependencies, you can run the project by executing the main script or following any specific instructions provided in the project's README or documentation.
+- Once you've installed the dependencies, you can run the project by executing the main script *C6GNFP.R* or following any specific instructions provided in the project's README or documentation.
+- The script *C6GNFP.R* is referred to a network with a population size N=500.
+- Before you run the project you need to check the input data for the case study shared in github in the .rar *input data csv (N=500)*, and moreover you need to fix the *your_local_path* as indicated in the script, to run the algorithm with the input data. 
 
 ### Citation
 
