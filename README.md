@@ -1,13 +1,50 @@
-# Complex6GNFPlacement
-A Complex-based 6G Network Functions Placement based on multiplex networks and evolutionary game theory.
-The “Complex6GNF” Algorithm is based on a complex-based approach aimed at introducing a novel 6G NF Placement taking into account multiplex representation and evolutionary game theory. 
-We provide an algorithm where the following conditions are: 
+# Complex-based 6G Network Function Placement
+## Description 
+
+Towards 6G, a key challenge lies in the placement of virtual network functions on physical resources. This becomes complex due to the dynamic nature of mobile environments, making the design a major point of research. We propose a framework that sees this challenge as a complex and dynamic collective process, presenting a novel perspective which encompasses transport network and wireless segment aspects. The framework is built around an analytical modeling and algorithmic tools that rely on complex systems' paradigm as multiplex networks and evolutionary game theory. The multiplex network enables capturing the layered and heterogeneous nature of the environment. Evolutionary game theory models the dynamical behavior of the system as a collective social process, where each decision on functions influences the overall outcome. Our model allows us to achieve a placement scheme that optimizes 6G functions deployment and minimizes the number of active computational nodes. Compared to traditional transport network centric approach, it effectively reduces interference, ensuring the network's effective operation and performance. Results show the efficacy of the strategy, enabling the dynamic distribution of functions as the outcome of a social dilemma, and highlight the potential applicability of this approach to tackle the network function placement problem in 6G networks.
+
+The *“Complex6GNF” Algorithm* is based on a complex-based approach aimed at introducing the novel 6G NF Placement taking into account multiplex representation and evolutionary game theory:
 
 -It provides a placement of 6G-RU, 6G-DU, 6G-CU, and 6G-UPF functions such that each 6G-RU can be connected to a 6G-UPF with a latency lower than a threshold value τ.
 -It minimizes the interference between 6G-RUs not connected to the same 6G-DU.  
 -It minimizes the number of active nodes, i.e. nodes hosting virtual network functions. As 6G-RUs are physical components and their placement is given, we can achieve this objective by acting on the placement of 6G-DUs, 6G-CUs, and 6G-UPFs
 
-Given a large-scale topology of hierarchical multistage metro-aggregation represented as graph G(V,E) with V the set of network nodes and E the set of optical fiber links, the algorithm “Complex6GNF” requires also an interference matrix I, delay matrix L, and path delay matrix D. Our model assumes that the 6GRUs are distributed over the selected area.
+Given a large-scale topology of hierarchical multistage metro-aggregation represented as graph G(V,E) with V the set of network nodes and E the set of optical fiber links, the algorithm “Complex6GNF” requires also an interference matrix I, delay matrix L, and path delay matrix D as input dataset. 
+Our model assumes that the 6GRUs are distributed over the selected area.
 The transmitted power of each 6G-RU such that the coverage radius of each 6G-RU is set at half the distance from the closest 6G-RU.
-
 In this way it is possible building the weighted multiplex network representation and running the algorithm to get the 6G NF placement. 
+
+## Usage 
+
+### Installation 
+#### Install R:
+
+If you haven't already installed R on your system, you can download it from the R Project website https://www.r-project.org/ 
+
+#### Install RStudio:
+
+RStudio is an integrated development environment (IDE) for R. You can download it from the RStudio website https://posit.co/
+
+#### Clone or Download the Repository:
+
+Clone the repository to your local machine using Git:
+
+git clone https://github.com/Marialisa/Complex6GNFPlacement.git
+
+Alternatively, you can download the repository as a ZIP file and extract it to your desired location.
+
+#### Open the Project in RStudio:
+
+Launch RStudio and navigate to the directory where you cloned or extracted the repository. Open the .Rproj file to load the project in RStudio.
+
+#### Run the Project:
+
+Once you've installed the dependencies, you can run the project by executing the main script or following any specific instructions provided in the project's README or documentation.
+
+### Citation
+
+If you use this code in your research, please cite the following paper:
+
+- [Author(s). "Title of the Paper." Journal/Conference Name, Year.]
+- [Author(s). "Title of the Paper." Journal/Conference Name, Year.]
+
