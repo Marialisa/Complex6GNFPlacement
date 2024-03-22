@@ -35,7 +35,7 @@ Alternatively, you can download the repository as a ZIP file and extract it to y
 
 #### Open the Project in RStudio:
 
-Launch RStudio and navigate to the directory where you cloned or extracted the repository. Open the .Rproj file to load the project in RStudio.
+Launch RStudio and navigate to the directory where you cloned or extracted the repository.
 
 #### Run the Project:
 
