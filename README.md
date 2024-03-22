@@ -45,11 +45,11 @@ Launch RStudio and navigate to the directory where you cloned or extracted the r
 
 ### Citation
 
-If you use this code in your research, please cite the following paper:
+If you use this code in your research, please cite the following papers:
 
-- [Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A 6G Function Placement Framework Based on Complex Networks and Evolutionary Dynamics." 2nd International Conference on 6G Networking (6GNet), 2023.]
+#### Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A 6G Function Placement Framework Based on Complex Networks and Evolutionary Dynamics." 2nd International Conference on 6G Networking (6GNet), 2023.
 
-Bibtex Citation :
+#### Bibtex Citation :
 @inproceedings{scata20236g,
   title={A 6G Function Placement Framework Based on Complex Networks and Evolutionary Dynamics},
   author={Scat{\`a}, M and La Corte, A and Marotta, A and Graziosi, F and Cassioli, D},
@@ -58,7 +58,8 @@ Bibtex Citation :
   year={2023},
   organization={IEEE}
 }
-- [Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A Complex Network and Evolutionary Game Theory Framework for 6G Function Placement." IEEE Open Journal of the Communications Society, 2024.(*currently in revision*)]
+
+#### Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A Complex Network and Evolutionary Game Theory Framework for 6G Function Placement." IEEE Open Journal of the Communications Society, 2024.(*currently in revision*)
 
 
 
