@@ -59,7 +59,7 @@ Bibtex Citation :
   organization={IEEE}
 }
 - [Scatà Marialisa, Aurelio La Corte, Andrea Marotta, Fabio Graziosi, Dajana Cassioli. "A Complex Network and Evolutionary Game Theory Framework for 6G Function Placement." IEEE Open Journal of the Communications Society, 2024.(*currently in revision*)]
-Bibtex Citation :
+
 
 
 ## Extensions
